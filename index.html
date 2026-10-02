@@ -1,30 +1,360 @@
-<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>بوابة العميل - تأسيس الشركات</title>
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>منصة تأسيس الشركات</title>
 <style>
-*{box-sizing:border-box}body{margin:0;font-family:Tahoma,Arial;background:#f4f7fb;color:#183047}button,input,select,textarea{font:inherit}.hide{display:none!important}
-.login{max-width:440px;margin:7vh auto;background:#fff;border:1px solid #dde6ef;border-radius:18px;padding:26px;box-shadow:0 18px 50px #17304712}input,select,textarea{width:100%;padding:12px;border:1px solid #dce5ee;border-radius:9px;margin:6px 0 12px}button{border:0;border-radius:9px;padding:11px 15px;cursor:pointer}.primary{background:#1769df;color:#fff}.light{background:#fff;border:1px solid #dce5ee}.msg{padding:11px;border-radius:8px;margin-top:10px;background:#edf7ff}.err{background:#fff0f0;color:#a22}
-.app{min-height:100vh}aside{position:fixed;right:0;top:0;bottom:0;width:230px;background:#081e36;color:#fff;padding:20px 12px}.brand{font-size:18px;font-weight:bold;padding:10px 12px 25px}.nav{display:block;width:100%;text-align:right;background:transparent;color:#dce7f0;padding:12px;border:0;margin:3px 0}.nav.active{background:#1769df;color:#fff}main{margin-right:230px;padding:24px}.top{display:flex;justify-content:space-between;align-items:center;background:#fff;border:1px solid #e0e7ef;border-radius:12px;padding:15px;margin-bottom:15px}.card{background:#fff;border:1px solid #e0e7ef;border-radius:13px;padding:18px;margin-bottom:14px}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.kpi b{display:block;font-size:28px;margin-top:8px}table{width:100%;border-collapse:collapse}th,td{padding:11px;border-bottom:1px solid #edf1f5;text-align:right}.pill{display:inline-block;padding:5px 9px;border-radius:20px;background:#e8f2ff;color:#1769df;font-size:11px}.page{display:none}.page.active{display:block}.muted{color:#74869a}@media(max-width:750px){aside{width:70px}aside .txt,.brand{font-size:0}main{margin-right:70px}.grid{grid-template-columns:1fr}}
-</style></head><body>
-<div id="auth" class="login"><h1>بوابة العميل</h1><p class="muted">سجل الدخول لإرسال ومتابعة طلبات تأسيس الشركات.</p><input id="email" type="email" placeholder="البريد الإلكتروني"><input id="password" type="password" placeholder="كلمة المرور"><button class="primary" id="login">دخول</button> <button class="light" id="signup">إنشاء حساب</button><div id="authMsg"></div></div>
-<div id="app" class="app hide"><aside><div class="brand">◆ <span class="txt">بوابة العميل</span></div><button class="nav active" data-p="home">⌂ <span class="txt">الرئيسية</span></button><button class="nav" data-p="new">＋ <span class="txt">طلب تأسيس جديد</span></button><button class="nav" data-p="requests">▣ <span class="txt">طلباتي</span></button><button class="nav" data-p="quotes">⌑ <span class="txt">عروض الأسعار</span></button><button class="nav" data-p="invoices">▤ <span class="txt">الفواتير</span></button></aside><main>
-<div class="top"><div><b id="hello">مرحبًا</b><div class="muted">حساب العميل</div></div><button class="light" id="logout">تسجيل الخروج</button></div>
-<section id="home" class="page active"><div class="grid"><div class="card kpi">إجمالي الطلبات<b id="k1">0</b></div><div class="card kpi">قيد التنفيذ<b id="k2">0</b></div><div class="card kpi">مكتملة<b id="k3">0</b></div></div><div class="card"><h2>آخر الطلبات</h2><div id="recent"></div></div></section>
-<section id="new" class="page"><div class="card"><h2>طلب تأسيس شركة جديد</h2><p class="muted">الطلب سيُحفظ مباشرة في Supabase ويظهر في لوحة الإدارة.</p><label>اسم الشركة المقترح</label><input id="company" placeholder="مثال: شركة الريادة للحلول"><label>الكيان القانوني</label><select id="entity"><option>شركة ذات مسؤولية محدودة</option><option>مؤسسة فردية</option><option>شركة مساهمة</option></select><label>المدينة</label><input id="city" placeholder="الرياض"><label>النشاط</label><input id="activity" placeholder="الاستشارات الإدارية"><label>الخدمة</label><select id="service"><option>تأسيس شركة</option><option>تعديل عقد تأسيس</option><option>إضافة شريك</option><option>تغيير مدير</option><option>تعديل نشاط</option></select><label>ملاحظات</label><textarea id="notes" rows="4"></textarea><button class="primary" id="send">إرسال الطلب للإدارة</button><div id="sendMsg"></div></div></section>
-<section id="requests" class="page"><div class="card"><h2>طلباتي</h2><div style="overflow:auto"><table><thead><tr><th>رقم الطلب</th><th>الخدمة</th><th>الحالة</th><th>الإنجاز</th><th>التاريخ</th></tr></thead><tbody id="rows"></tbody></table></div></div></section>
-<section id="quotes" class="page"><div class="card"><h2>عروض الأسعار</h2><div id="quotesBox" class="muted">لا توجد عروض حاليًا.</div></div></section>
-<section id="invoices" class="page"><div class="card"><h2>الفواتير</h2><div id="invoiceBox" class="muted">لا توجد فواتير حاليًا.</div></div></section>
-</main></div>
+:root{--navy:#062844;--navy2:#0b3d63;--gold:#e0b85d;--bg:#f5f8fc;--ink:#10283f;--muted:#73849a;--line:#dfe7f0;--blue:#2d7ce8;--green:#14a66f}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:Tahoma,Arial,sans-serif}button,input,select,textarea{font:inherit}
+.top{height:72px;position:absolute;z-index:10;top:0;right:0;left:0;display:flex;align-items:center;justify-content:space-between;padding:0 4%;color:#fff}
+.brand{display:flex;gap:10px;align-items:center;font-weight:800}.mark{width:44px;height:44px;border:2px solid var(--gold);border-radius:11px;display:grid;place-items:center;color:var(--gold);font-size:22px}.brand small{display:block;font-weight:400;color:#e9c978;margin-top:4px}
+.nav{display:flex;gap:28px;font-size:14px}.login{border:0;background:#092b48;color:#fff;border-radius:10px;padding:12px 18px}
+.hero{min-height:410px;color:#fff;position:relative;overflow:hidden;background:
+linear-gradient(90deg,rgba(3,30,53,.96) 0%,rgba(5,42,72,.88) 36%,rgba(6,41,69,.38) 68%,rgba(4,26,45,.86) 100%),
+url('https://images.unsplash.com/photo-1512453979798-5ea266f8880c?auto=format&fit=crop&w=2000&q=85') center/cover}
+.hero-inner{padding:115px 4% 34px;display:grid;grid-template-columns:1fr 1fr;gap:5%;align-items:center}
+.hero h1{font-size:42px;margin:0 0 15px;line-height:1.35}.hero p{font-size:18px;line-height:1.9;color:#e4edf5;max-width:650px}
+.trust{display:flex;gap:38px;margin:25px 0}.trust div{text-align:center;color:#f7d47c}.trust b{display:block;color:#fff;font-size:13px;margin-top:7px}
+.cta{border:0;border-radius:10px;background:linear-gradient(135deg,#f4d27d,#d6a843);padding:15px 28px;color:#10283f;font-weight:800;cursor:pointer}
+.entity-panel{background:rgba(7,34,57,.9);border:1px solid rgba(255,255,255,.18);border-radius:15px;padding:22px;box-shadow:0 25px 60px rgba(0,0,0,.25)}
+.entity-panel h2{margin:0 0 4px}.entity-panel>p{font-size:13px;margin:0 0 16px}
+.entities{display:grid;grid-template-columns:1fr 1fr;gap:12px}.entity{border:1px solid rgba(255,255,255,.2);border-radius:12px;padding:18px;cursor:pointer;background:rgba(255,255,255,.05);min-height:92px}.entity.active,.entity:hover{border-color:var(--gold);background:rgba(224,184,93,.09)}.entity strong{display:block;margin-bottom:7px}.entity small{color:#c8d5e0}
+.app{width:min(1500px,96%);margin:-2px auto 35px}.wizard{background:#fff;border-radius:0 0 16px 16px;box-shadow:0 12px 40px rgba(20,48,75,.08);overflow:hidden}
+.stepbar{display:grid;grid-template-columns:repeat(7,1fr);padding:15px 18px 8px;border-bottom:1px solid var(--line);background:#fff}.step{text-align:center;color:#8a99aa;font-size:11px;position:relative}.step:before{content:"";position:absolute;height:2px;background:#e7edf4;top:15px;right:-50%;left:50%}.step:first-child:before{display:none}.bubble{position:relative;z-index:1;width:31px;height:31px;margin:auto auto 7px;border-radius:50%;display:grid;place-items:center;background:#edf2f7}.step.active{color:var(--navy);font-weight:bold}.step.active .bubble{background:var(--navy);color:#fff}.step.done .bubble{background:var(--green);color:#fff}
+.body{padding:28px;min-height:385px}.head{text-align:center;margin-bottom:25px}.head h2{margin:0 0 7px;font-size:24px}.head p{margin:0;color:var(--muted)}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}.field{display:flex;flex-direction:column;gap:7px}.full{grid-column:1/-1}label{font-size:13px;font-weight:bold}input,select,textarea{border:1px solid #d8e1eb;border-radius:8px;padding:12px;outline:0;background:#fff}input:focus,select:focus,textarea:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(45,124,232,.08)}
+.choicegrid{display:grid;grid-template-columns:repeat(4,1fr);gap:15px;max-width:900px;margin:auto}.choice{border:1px solid var(--line);border-radius:12px;padding:25px 14px;text-align:center;cursor:pointer}.choice.sel{border:2px solid var(--blue);box-shadow:0 8px 25px rgba(45,124,232,.1)}.choice .icon{font-size:31px;margin-bottom:12px}.choice small{display:block;color:var(--muted);margin-top:8px;line-height:1.5}
+.actions{display:flex;justify-content:space-between;border-top:1px solid var(--line);padding:17px 28px}.btn{border:0;border-radius:8px;padding:12px 27px;cursor:pointer;font-weight:bold}.primary{background:var(--navy);color:#fff}.secondary{background:#f4f6f9;border:1px solid var(--line);color:#66778b}
+.upload{border:2px dashed #ccd8e6;border-radius:12px;padding:22px;text-align:center;background:#fbfdff}.upload input{margin-top:10px}.review{max-width:850px;margin:auto;background:#f8fafc;border:1px solid var(--line);border-radius:12px;padding:20px}.reviewrow{display:grid;grid-template-columns:1fr 1fr;gap:10px}.reviewitem{padding:12px;background:#fff;border:1px solid var(--line);border-radius:8px}.reviewitem small{display:block;color:var(--muted);margin-bottom:5px}
+.success{text-align:center;padding:30px}.check{width:70px;height:70px;border-radius:50%;background:#e5f7f0;color:var(--green);display:grid;place-items:center;font-size:36px;margin:auto}.ref{max-width:460px;margin:18px auto;padding:15px;border:1px solid #ecd28e;background:#fff9e9;border-radius:10px;font-size:22px;font-weight:bold}
+.toast{position:fixed;bottom:22px;left:22px;background:#fff;border:1px solid var(--line);box-shadow:0 15px 40px rgba(0,0,0,.12);padding:13px 17px;border-radius:10px;display:none}
+@media(max-width:900px){.nav{display:none}.hero-inner{grid-template-columns:1fr}.entity-panel{margin-top:15px}.hero h1{font-size:31px}.choicegrid,.grid,.reviewrow{grid-template-columns:1fr 1fr}.stepbar{overflow:auto;grid-template-columns:repeat(7,100px)}}
+@media(max-width:560px){.choicegrid,.grid,.reviewrow{grid-template-columns:1fr}.hero-inner{padding-top:95px}.trust{gap:15px;flex-wrap:wrap}.entity-panel{display:none}}
+
+.partner-card{border:1px solid var(--line);border-radius:12px;padding:16px;margin-bottom:12px;background:#fbfdff}
+.partner-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.mini{border:0;border-radius:7px;padding:7px 11px;cursor:pointer}.danger{background:#fff0f0;color:#b33}.add{background:#eaf3ff;color:#175da8}
+.names-list{display:grid;gap:10px}.req-list{display:grid;grid-template-columns:1fr 1fr;gap:12px}.req{border:1px solid var(--line);border-radius:10px;padding:14px;background:#fff}.req b{display:block;margin-bottom:5px}.req small{color:var(--muted)}
+.total-share{padding:10px 13px;border-radius:9px;background:#edf7f3;color:#08724d;font-weight:bold;margin-bottom:14px}.warn{background:#fff5e7;color:#8a5b08}
+@media(max-width:700px){.req-list{grid-template-columns:1fr}}
+
+.completion{margin:14px 28px 0;display:flex;align-items:center;gap:12px}.completion-track{height:7px;background:#e9eef4;border-radius:10px;flex:1;overflow:hidden}.completion-fill{height:100%;background:linear-gradient(90deg,var(--blue),var(--green));transition:.3s}.completion span{font-size:12px;color:var(--muted);white-space:nowrap}
+.smartbox{max-width:900px;margin:0 auto 20px;background:linear-gradient(135deg,#f3f8ff,#fffaf0);border:1px solid #dbe6f2;border-radius:13px;padding:16px}.smartbox b{color:var(--navy)}
+.activity-row{display:grid;grid-template-columns:1fr auto;gap:8px;margin-bottom:8px}.qr{width:116px;height:116px;margin:18px auto;background:repeating-conic-gradient(#092b48 0 25%,#fff 0 50%) 50%/18px 18px;border:8px solid #fff;outline:1px solid var(--line)}
+
+.meeting-card{max-width:900px;margin:20px auto 0;border:1px solid var(--line);border-radius:14px;background:#fff;padding:22px;text-align:right}
+.meeting-types{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:15px 0}.meeting-type{border:1px solid var(--line);border-radius:11px;padding:18px;cursor:pointer;text-align:center}.meeting-type.selected{border:2px solid var(--blue);background:#f4f8ff}
+.slots{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.slot{border:1px solid var(--line);background:#fff;border-radius:8px;padding:9px 13px;cursor:pointer}.slot.selected{background:var(--navy);color:#fff}
+.meet-result{margin-top:18px;background:#f2faf6;border:1px solid #ccebdd;border-radius:11px;padding:17px}.meet-link{direction:ltr;display:block;background:#fff;border:1px solid var(--line);border-radius:8px;padding:11px;margin:10px 0;word-break:break-all}
+@media(max-width:650px){.meeting-types{grid-template-columns:1fr}}
+
+.portal{width:min(1500px,96%);margin:22px auto 35px;display:none}
+.portal-grid{display:grid;grid-template-columns:250px 1fr;gap:18px}
+.sidebar,.portal-main{background:#fff;border:1px solid var(--line);border-radius:15px;box-shadow:0 10px 35px rgba(20,48,75,.06)}
+.sidebar{padding:16px;height:max-content}.profile{padding:14px;text-align:center;border-bottom:1px solid var(--line);margin-bottom:12px}.avatar2{width:55px;height:55px;border-radius:50%;margin:auto auto 9px;background:var(--navy);color:#fff;display:grid;place-items:center;font-size:20px}
+.menu button{width:100%;text-align:right;border:0;background:transparent;padding:12px;border-radius:9px;cursor:pointer;color:var(--ink);margin:2px 0}.menu button:hover,.menu button.on{background:#edf4fb;color:var(--navy);font-weight:bold}
+.portal-main{padding:22px}.welcome{display:flex;justify-content:space-between;align-items:center;gap:15px;margin-bottom:18px}.welcome h2{margin:0 0 5px}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.kpi{border:1px solid var(--line);border-radius:12px;padding:16px;background:#fbfdff}.kpi b{font-size:24px;display:block;color:var(--navy)}.kpi small{color:var(--muted)}
+.reqcard{border:1px solid var(--line);border-radius:14px;padding:18px;margin-top:16px}.reqtop{display:flex;justify-content:space-between;gap:12px}.status{padding:7px 11px;border-radius:20px;background:#fff4d8;color:#8a650c;font-size:12px;height:max-content}.timeline{display:flex;justify-content:space-between;margin:25px 0;position:relative}.timeline:before{content:"";position:absolute;top:13px;right:5%;left:5%;height:3px;background:#e7edf4}.tl{position:relative;z-index:1;text-align:center;font-size:11px;color:var(--muted);width:20%}.dot{width:28px;height:28px;border-radius:50%;background:#e7edf4;margin:auto auto 7px;display:grid;place-items:center}.tl.done .dot{background:var(--green);color:#fff}.tl.current .dot{background:var(--gold);color:#fff}
+.alertbox{background:#fff8e8;border:1px solid #f0d99d;border-radius:11px;padding:14px;margin-top:14px}.portal-table{width:100%;border-collapse:collapse}.portal-table th,.portal-table td{padding:12px;border-bottom:1px solid var(--line);text-align:right;font-size:13px}
+.empty{padding:45px;text-align:center;color:var(--muted)}
+.login-modal{position:fixed;inset:0;background:rgba(3,24,41,.7);z-index:100;display:none;align-items:center;justify-content:center;padding:20px}.loginbox{width:min(430px,100%);background:#fff;border-radius:16px;padding:25px}.loginbox h2{margin-top:0}
+@media(max-width:850px){.portal-grid{grid-template-columns:1fr}.sidebar{display:none}.kpis{grid-template-columns:1fr 1fr}.timeline{overflow:auto}.tl{min-width:110px}}
+
+.taskgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:15px 0}.task{border:1px solid var(--line);border-radius:12px;padding:15px;background:#fff}.task.urgent{border-right:4px solid #d85b5b}.task.pay{border-right:4px solid var(--gold)}.task.meet{border-right:4px solid var(--blue)}.task small{color:var(--muted)}
+.company-card{border:1px solid var(--line);border-radius:13px;padding:17px;margin-top:12px;display:flex;justify-content:space-between;align-items:center;gap:12px}.company-card .company-icon{width:48px;height:48px;border-radius:12px;background:#edf4fb;display:grid;place-items:center;font-size:24px}
+.quote{border:1px solid var(--line);border-radius:13px;overflow:hidden;margin-top:15px}.quote-head{background:#f7f9fc;padding:15px;display:flex;justify-content:space-between}.quote-body{padding:15px}.money{font-size:24px;font-weight:bold;color:var(--navy)}.approval{background:#f2faf6;border:1px solid #cdebdc;border-radius:10px;padding:13px;margin-top:12px}
+.activity{border-right:2px solid #dfe7f0;margin:18px 8px;padding-right:20px}.activity-item{position:relative;padding:0 0 20px}.activity-item:before{content:"";position:absolute;right:-27px;top:3px;width:12px;height:12px;border-radius:50%;background:var(--blue);border:3px solid #fff;box-shadow:0 0 0 1px #cbd8e6}.activity-item small{color:var(--muted)}
+.finaldocs{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.finaldoc{border:1px solid var(--line);border-radius:10px;padding:14px;display:flex;justify-content:space-between;align-items:center}
+@media(max-width:800px){.taskgrid{grid-template-columns:1fr}.finaldocs{grid-template-columns:1fr}.company-card{align-items:flex-start}}
+</style>
+</head>
+<body>
+<header class="top">
+ <div class="brand"><div class="mark">▣</div><div>منصة تأسيس الشركات<small>تأسيس أسهل .. مستقبل أكبر</small></div></div>
+ <nav class="nav"><span>الرئيسية</span><span>الخدمات</span><span>الأسئلة الشائعة</span><span>تواصل معنا</span></nav>
+ <button class="login" onclick="openLogin()">● تسجيل الدخول</button>
+</header>
+
+<section class="hero">
+ <div class="hero-inner">
+  <div>
+   <h1>ابدأ رحلتك في تأسيس شركتك</h1>
+   <p>منصة متكاملة لاستقبال طلبات تأسيس الشركات بسهولة وتنظيم، من اختيار الكيان وحتى إرسال المستندات إلى فريق الإدارة.</p>
+   <div class="trust"><div>🛡<b>خدمة موثوقة</b></div><div>⚡<b>إجراءات سريعة</b></div><div>⚙<b>دعم متخصص</b></div></div>
+   <button class="cta" onclick="document.querySelector('.wizard').scrollIntoView({behavior:'smooth'})">ابدأ طلب تأسيس جديد ←</button>
+  </div>
+  <div class="entity-panel">
+   <h2>اختر نوع كيانك</h2><p>ابدأ بتحديد نوع الكيان المناسب لنشاطك</p>
+   <div class="entities">
+    <div class="entity active" onclick="quickPick(this,'شركة ذات مسؤولية محدودة')"><strong>🏢 شركة ذات مسؤولية محدودة</strong><small>الأكثر شيوعًا وملاءمة لمختلف الأنشطة</small></div>
+    <div class="entity" onclick="quickPick(this,'مؤسسة فردية')"><strong>♙ مؤسسة فردية</strong><small>مناسبة للأنشطة الفردية والصغيرة</small></div>
+    <div class="entity" onclick="quickPick(this,'شركة مساهمة')"><strong>👥 شركة مساهمة</strong><small>مناسبة للمشاريع الأكبر</small></div>
+    <div class="entity" onclick="quickPick(this,'شركة مهنية')"><strong>💼 شركة مهنية</strong><small>للمهن والأنشطة المهنية</small></div>
+   </div>
+  </div>
+ </div>
+</section>
+
+<main class="app">
+ <section class="wizard">
+  <div class="stepbar" id="stepbar"></div><div class="completion"><div class="completion-track"><div class="completion-fill" id="completionFill"></div></div><span id="completionText">14% مكتمل</span></div>
+  <div class="body" id="body"></div>
+  <div class="actions"><button class="btn secondary" id="prev" onclick="prev()">السابق</button><button class="btn primary" id="next" onclick="next()">التالي</button></div>
+ </section>
+</main>
+
+<section class="portal" id="portal">
+ <div class="portal-grid">
+  <aside class="sidebar">
+   <div class="profile"><div class="avatar2">ع</div><b id="portalName">حساب العميل</b><br><small class="muted">بوابة العميل</small></div>
+   <div class="menu">
+    <button class="on" onclick="portalPage('home',this)">⌂ الرئيسية</button>
+    <button onclick="portalPage('tasks',this)">✓ مهامي</button>
+    <button onclick="portalPage('companies',this)">🏢 شركاتي</button>
+    <button onclick="portalPage('requests',this)">▣ طلباتي</button>
+    <button onclick="portalPage('docs',this)">📄 مستنداتي</button>
+    <button onclick="portalPage('meetings',this)">📅 اجتماعاتي</button>
+    <button onclick="portalPage('quotes',this)">💰 عروض الأسعار</button>
+    <button onclick="portalPage('invoices',this)">🧾 الفواتير</button>
+    <button onclick="portalPage('activity',this)">↻ سجل النشاط</button>
+    <button onclick="portalPage('messages',this)">✉ الرسائل</button>
+    <button onclick="portalPage('support',this)">◉ الدعم</button>
+   </div>
+  </aside>
+  <div class="portal-main" id="portalMain"></div>
+ </div>
+</section>
+<div class="login-modal" id="loginModal"><div class="loginbox">
+ <h2>تسجيل الدخول إلى بوابة العميل</h2><p class="muted">سجّل الدخول بحساب العميل المرتبط بالمنصة.</p>
+ <div class="field"><label>البريد الإلكتروني</label><input id="loginUser" type="email" placeholder="name@email.com"></div>
+ <div class="field" style="margin-top:12px"><label>كلمة المرور</label><input id="loginPass" type="password" placeholder="كلمة المرور"></div>
+ <div id="loginError" class="muted" style="margin-top:8px"></div>
+ <div style="margin-top:18px;display:flex;gap:8px"><button class="btn primary" onclick="loginLive()">دخول</button><button class="btn secondary" onclick="signupLive()">إنشاء حساب</button><button class="btn secondary" onclick="closeLogin()">إلغاء</button></div>
+</div></div>
+<div class="toast" id="toast">✓ تم حفظ المسودة على هذا الجهاز</div>
+
 <script>
-const U='https://jtdxzszooiewafrnxven.supabase.co',K='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp0ZHh6c3pvb2lld2Fmcm54dmVuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA5MzM5MDksImV4cCI6MjEwNjUwOTkwOX0.MLBWLBGOz01R6zm9mf8K1Tx6oqHEHkWWlC8jw7O9-jU';let T=localStorage.getItem("customer_token")||"",USER=null;
-async function api(path,opt={}){let h={apikey:K,"Content-Type":"application/json",...(opt.headers||{})};if(T)h.Authorization="Bearer "+T;return fetch(U+path,{...opt,headers:h})}
-function message(id,t,e=false){let x=document.getElementById(id);x.className="msg "+(e?"err":"");x.textContent=t}
-async function doLogin(){let r=await api("/auth/v1/token?grant_type=password",{method:"POST",body:JSON.stringify({email:email.value.trim(),password:password.value})}),d=await r.json();if(!r.ok)return message("authMsg",d.error_description||d.message||"فشل الدخول",true);T=d.access_token;USER=d.user;localStorage.setItem("customer_token",T);openApp()}
-async function doSignup(){let r=await api("/auth/v1/signup",{method:"POST",body:JSON.stringify({email:email.value.trim(),password:password.value,data:{full_name:email.value.split("@")[0]}})}),d=await r.json();if(!r.ok)return message("authMsg",d.msg||d.message||"فشل إنشاء الحساب",true);if(d.access_token){T=d.access_token;USER=d.user;localStorage.setItem("customer_token",T);openApp()}else message("authMsg","تم إنشاء الحساب. سجل الدخول الآن.")}
-async function restore(){if(!T)return;let r=await api("/auth/v1/user");if(!r.ok){T="";localStorage.removeItem("customer_token");return}USER=await r.json();openApp()}
-async function openApp(){auth.classList.add("hide");app.classList.remove("hide");hello.textContent="مرحبًا، "+(USER.email||"العميل");await loadRequests();loadFinance()}
-function ar(s){return {new:"جديد",review:"قيد المراجعة",documents_required:"مطلوب مستندات",quote:"عرض سعر",payment:"بانتظار الدفع",in_progress:"قيد التنفيذ",completed:"مكتمل",cancelled:"ملغي"}[s]||s}
-async function loadRequests(){let r=await api("/rest/v1/requests?select=*&order=created_at.desc"),d=await r.json();if(!r.ok){rows.innerHTML=`<tr><td colspan="5">${d.message||"تعذر التحميل"}</td></tr>`;return}k1.textContent=d.length;k2.textContent=d.filter(x=>x.status==="in_progress").length;k3.textContent=d.filter(x=>x.status==="completed").length;rows.innerHTML=d.map(x=>`<tr><td>${x.request_no}</td><td>${x.service_name}</td><td><span class="pill">${ar(x.status)}</span></td><td>${x.progress}%</td><td>${new Date(x.created_at).toLocaleDateString("ar-SA")}</td></tr>`).join("")||'<tr><td colspan="5">لا توجد طلبات.</td></tr>';recent.innerHTML=d.slice(0,3).map(x=>`<div class="card"><b>${x.request_no}</b> — ${x.service_name} <span class="pill">${ar(x.status)}</span></div>`).join("")||'<p class="muted">ابدأ بإرسال أول طلب تأسيس.</p>'}
-async function sendRequest(){if(!company.value.trim())return message("sendMsg","اكتب اسم الشركة.",true);send.disabled=true;message("sendMsg","جاري إرسال الطلب...");let cr=await api("/rest/v1/companies",{method:"POST",headers:{Prefer:"return=representation"},body:JSON.stringify({owner_id:USER.id,name:company.value.trim(),entity_type:entity.value,city:city.value,activity:activity.value})}),cd=await cr.json();if(!cr.ok){send.disabled=false;return message("sendMsg","خطأ الشركة: "+(cd.message||cr.status),true)}let rr=await api("/rest/v1/requests",{method:"POST",headers:{Prefer:"return=representation"},body:JSON.stringify({customer_id:USER.id,company_id:cd[0].id,service_name:service.value,customer_notes:notes.value,status:"new",priority:"medium",progress:0})}),rd=await rr.json();send.disabled=false;if(!rr.ok)return message("sendMsg","خطأ الطلب: "+(rd.message||rr.status),true);message("sendMsg","تم إرسال الطلب بنجاح ✓ رقم الطلب: "+rd[0].request_no);company.value="";notes.value="";await loadRequests();setTimeout(()=>document.querySelector('[data-p="requests"]').click(),800)}
-async function loadFinance(){let q=await api("/rest/v1/quotes?select=*&order=created_at.desc"),qd=await q.json();if(q.ok&&qd.length)quotesBox.innerHTML=qd.map(x=>`<div class="card"><b>${x.quote_no}</b> — ${Number(x.total).toLocaleString()} ريال — ${x.status}</div>`).join("");let i=await api("/rest/v1/invoices?select=*&order=created_at.desc"),id=await i.json();if(i.ok&&id.length)invoiceBox.innerHTML=id.map(x=>`<div class="card"><b>${x.invoice_no}</b> — ${Number(x.total).toLocaleString()} ريال — ${x.status}</div>`).join("")}
-document.querySelectorAll(".nav").forEach(n=>n.onclick=()=>{document.querySelectorAll(".nav").forEach(x=>x.classList.remove("active"));document.querySelectorAll(".page").forEach(x=>x.classList.remove("active"));n.classList.add("active");document.getElementById(n.dataset.p).classList.add("active");if(n.dataset.p==="requests")loadRequests()});
-login.onclick=doLogin;signup.onclick=doSignup;send.onclick=sendRequest;logout.onclick=()=>{localStorage.removeItem("customer_token");location.reload()};restore();
-</script></body></html>
+const names=["نوع الكيان","بيانات الشركة","الشركاء والملاك","النشاط والتراخيص","المستندات","مراجعة الطلب","الإقرار والإرسال"];
+let step=0,d={entity:"شركة ذات مسؤولية محدودة"};
+try{Object.assign(d,JSON.parse(localStorage.getItem("premiumFormation")||"{}"))}catch(e){}
+function save(){localStorage.setItem("premiumFormation",JSON.stringify(d));let t=document.getElementById("toast");t.style.display="block";setTimeout(()=>t.style.display="none",1200)}
+function f(label,key,ph="",type="text"){return `<div class="field"><label>${label}</label><input type="${type}" value="${d[key]||""}" placeholder="${ph}" onchange="d.${key}=this.value;save()"></div>`}
+function steps(){document.getElementById("stepbar").innerHTML=names.map((n,i)=>`<div class="step ${i<step?"done":i===step?"active":""}"><div class="bubble">${i<step?"✓":i+1}</div>${n}</div>`).join("")}
+function render(){
+ steps();let b=document.getElementById("body");let pct=Math.round((step+1)/7*100);document.getElementById("completionFill").style.width=pct+"%";document.getElementById("completionText").textContent=pct+"% مكتمل";document.getElementById("prev").style.visibility=step?"visible":"hidden";document.getElementById("next").textContent=step===6?"إرسال الطلب":"التالي";
+ if(step===0)b.innerHTML=`<div class="head"><h2>المسار الذكي لتأسيس شركتك</h2><p>حدد نوع مقدم الطلب ثم اختر الكيان المناسب</p></div>
+<div class="smartbox"><div class="grid"><div class="field"><label>صفة مقدم الطلب</label><select onchange="d.applicant=this.value;save()"><option>${d.applicant||"مالك / شريك"}</option><option>مالك / شريك</option><option>مفوض</option><option>ممثل شركة</option></select></div><div class="field"><label>صفة المستثمر</label><select onchange="d.investor=this.value;save()"><option>${d.investor||"سعودي / خليجي"}</option><option>سعودي / خليجي</option><option>مستثمر أجنبي</option></select></div></div><p style="margin-bottom:0"><b>اقتراح المنصة:</b> اختر الكيان حسب طبيعة الشركاء والنشاط، وستتغير المتطلبات تلقائيًا في الخطوات التالية.</p></div>
+<div class="choicegrid">${["مؤسسة فردية","شركة ذات مسؤولية محدودة","شركة مهنية","شركة مساهمة"].map((x,i)=>`<div class="choice ${d.entity===x?"sel":""}" onclick="d.entity='${x}';save();render()"><div class="icon">${["♙","🏢","💼","👥"][i]}</div><b>${x}</b><small>${["مناسبة للأعمال الفردية","الأكثر شيوعًا للشركات","للمهن والخدمات المتخصصة","للمشاريع والاستثمارات الأكبر"][i]}</small></div>`).join("")}</div>`;if(step===1)b.innerHTML=`<div class="head"><h2>بيانات الشركة الأساسية</h2><p>الأسماء التجارية ورأس المال والمقر وبيانات التواصل</p></div><div class="grid">
+${f("الاسم التجاري المقترح الأول *","company","الاختيار الأول")}${f("الاسم التجاري المقترح الثاني","company2","الاختيار الثاني")}${f("الاسم التجاري المقترح الثالث","company3","الاختيار الثالث")}${f("الاسم بالإنجليزية","companyEn","Enter company name")}
+${f("عدد الحصص","sharesCount","100","number")}${f("قيمة الحصة","shareValue","1000","number")}
+<div class="field"><label>رأس المال المحسوب</label><input readonly value="${(Number(d.sharesCount||100)*Number(d.shareValue||1000)).toLocaleString()}"></div>
+<div class="field"><label>المدينة *</label><select onchange="d.city=this.value;save()"><option>${d.city||"اختر المدينة"}</option><option>الرياض</option><option>جدة</option><option>مكة المكرمة</option><option>الدمام</option><option>أبها</option></select></div>
+${f("الحي","district","اسم الحي")}${f("الرمز البريدي","postal","الرمز البريدي")}${f("جوال الشركة","companyPhone","05xxxxxxxx")}${f("البريد الرسمي","companyEmail","info@company.com","email")}
+<div class="field full"><label>العنوان التفصيلي</label><textarea rows="3" onchange="d.address=this.value;save()">${d.address||""}</textarea></div></div>`;if(step===2){
+ if(!d.partners||!Array.isArray(d.partners)||!d.partners.length)d.partners=[{name:d.owner||"",id:d.id||"",phone:d.phone||"",email:d.email||"",share:Number(d.share||100),nationality:d.nationality||""}];
+ let total=d.partners.reduce((a,x)=>a+Number(x.share||0),0);
+ b.innerHTML=`<div class="head"><h2>الشركاء والملاك</h2><p>أضف جميع الشركاء وحدد نسبة ملكية كل شريك</p></div>
+ <div class="total-share ${total===100?"":"warn"}">إجمالي نسب الملكية: ${total}% ${total===100?"✓":"— يجب أن يكون الإجمالي 100%"}</div>
+ <div id="partners">${d.partners.map((x,i)=>`<div class="partner-card"><div class="partner-head"><b>الشريك ${i+1}</b>${d.partners.length>1?`<button class="mini danger" onclick="removePartner(${i})">حذف</button>`:""}</div><div class="grid">
+ <div class="field"><label>الاسم الكامل *</label><input value="${x.name||""}" onchange="partnerSet(${i},'name',this.value)"></div>
+ <div class="field"><label>رقم الهوية / الإقامة *</label><input value="${x.id||""}" onchange="partnerSet(${i},'id',this.value)"></div>
+ <div class="field"><label>الجنسية</label><input value="${x.nationality||""}" onchange="partnerSet(${i},'nationality',this.value)"></div>
+ <div class="field"><label>نسبة الملكية %</label><input type="number" min="0" max="100" value="${x.share||0}" onchange="partnerSet(${i},'share',Number(this.value));render()"></div>
+ <div class="field"><label>رقم الجوال</label><input value="${x.phone||""}" onchange="partnerSet(${i},'phone',this.value)"></div>
+ <div class="field"><label>البريد الإلكتروني</label><input type="email" value="${x.email||""}" onchange="partnerSet(${i},'email',this.value)"></div>
+ </div></div>`).join("")}</div>
+ <button class="mini add" onclick="addPartner()">+ إضافة شريك جديد</button>`;
+}
+if(step===3){
+ if(!d.activities||!d.activities.length)d.activities=[d.activity||""];
+ b.innerHTML=`<div class="head"><h2>النشاط والإدارة</h2><p>حدد الأنشطة وبيانات مدير الشركة</p></div><div class="grid">
+ <div class="field full"><label>الأنشطة التجارية</label>${d.activities.map((x,i)=>`<div class="activity-row"><input placeholder="${i===0?"النشاط الرئيسي":"نشاط إضافي"}" value="${x}" onchange="d.activities[${i}]=this.value;d.activity=d.activities[0];save()">${i?`<button class="mini danger" onclick="d.activities.splice(${i},1);save();render()">حذف</button>`:""}</div>`).join("")}<button class="mini add" onclick="d.activities.push('');save();render()">+ إضافة نشاط</button></div>
+ <div class="field"><label>هل يتطلب النشاط ترخيصًا إضافيًا؟</label><select onchange="d.license=this.value;save()"><option>${d.license||"غير متأكد"}</option><option>نعم</option><option>لا</option></select></div>
+ <div class="field"><label>مدير الشركة</label><select onchange="d.managerType=this.value;save();render()"><option>${d.managerType||"أحد الشركاء"}</option><option>أحد الشركاء</option><option>مدير من خارج الشركاء</option></select></div>
+ ${d.managerType==="مدير من خارج الشركاء"?f("اسم المدير","manager","الاسم الكامل")+f("هوية / إقامة المدير","managerId","رقم الهوية"):""}
+ <div class="field"><label>مدة الشركة</label><select onchange="d.duration=this.value;save()"><option>${d.duration||"غير محددة"}</option><option>غير محددة</option><option>5 سنوات</option><option>10 سنوات</option><option>20 سنة</option></select></div>
+ <div class="field"><label>بداية السنة المالية</label><input type="date" value="${d.fiscal||""}" onchange="d.fiscal=this.value;save()"></div>
+ <div class="field full"><label>تفاصيل النشاط</label><textarea rows="4" onchange="d.activityDetails=this.value;save()">${d.activityDetails||""}</textarea></div></div>`;
+}if(step===4){
+ let reqs=["هوية / إقامة المالك أو الشركاء","العنوان الوطني"];
+ if(d.entity==="شركة ذات مسؤولية محدودة"||d.entity==="شركة مساهمة")reqs.push("بيانات الشركاء ونسب الملكية","مستندات رأس المال إن وجدت");
+ if(d.entity==="شركة مهنية")reqs.push("المؤهلات أو التراخيص المهنية","ترخيص الجهة المختصة إن كان مطلوبًا");
+ if(d.license==="نعم")reqs.push("الترخيص أو موافقة الجهة المختصة");if(d.investor==="مستثمر أجنبي")reqs.push("مستندات المستثمر الأجنبي / الترخيص الاستثماري حسب الحالة");
+ b.innerHTML=`<div class="head"><h2>المستندات المطلوبة</h2><p>تم تحديد القائمة تلقائيًا حسب نوع الكيان وبيانات النشاط</p></div><div class="req-list">${reqs.map((r,i)=>`<div class="req"><b>✓ ${r}</b><small>ارفع ملف PDF أو صورة واضحة</small><input type="file" style="margin-top:10px;width:100%"></div>`).join("")}<div class="req"><b>+ مستندات إضافية</b><small>أي مستند داعم للطلب</small><input type="file" multiple style="margin-top:10px;width:100%"></div></div>`;
+}
+if(step===5){
+ let ps=(d.partners||[]).map((x,i)=>`${i+1}. ${x.name||"-"} — ${x.share||0}%`).join("<br>");
+ b.innerHTML=`<div class="head"><h2>مراجعة بيانات الطلب</h2><p>ملخص كامل قبل الإرسال إلى الإدارة</p></div><div class="review"><div class="reviewrow">
+ ${[["نوع الكيان",d.entity],["الاسم التجاري الأول",d.company],["الاسم التجاري الثاني",d.company2],["الاسم التجاري الثالث",d.company3],["رأس المال",d.capital],["المدينة",d.city],["النشاط الرئيسي",d.activity],["يتطلب ترخيصًا",d.license]].map(x=>`<div class="reviewitem"><small>${x[0]}</small><b>${x[1]||"-"}</b></div>`).join("")}
+ <div class="reviewitem" style="grid-column:1/-1"><small>الشركاء ونسب الملكية</small><b style="line-height:2">${ps||"-"}</b></div>
+ </div></div>`;
+}
+if(step===6)b.innerHTML=`<div class="head"><h2>الإقرار والتعهد</h2><p>راجع الإقرار ثم أرسل الطلب إلى الإدارة</p></div><div class="review"><p style="line-height:2">أقر بأن جميع البيانات المدخلة والمستندات المرفوعة صحيحة، وأوافق على إرسال الطلب لفريق الإدارة لمراجعته والتواصل معي عند الحاجة.</p><label><input id="agree" type="checkbox"> أوافق على الإقرار والتعهد</label><br><br><label><input id="privacy" type="checkbox"> أوافق على سياسة الخصوصية والشروط والأحكام</label></div>`;
+}
+function partnerSet(i,k,v){d.partners[i][k]=v;save()}
+function addPartner(){if(!d.partners)d.partners=[];d.partners.push({name:"",id:"",phone:"",email:"",share:0,nationality:""});save();render()}
+function removePartner(i){d.partners.splice(i,1);save();render()}
+function quickPick(el,x){document.querySelectorAll(".entity").forEach(e=>e.classList.remove("active"));el.classList.add("active");d.entity=x;save();step=0;render();document.querySelector(".wizard").scrollIntoView({behavior:"smooth"})}
+function next(){save();
+ if(step===2){let total=(d.partners||[]).reduce((a,x)=>a+Number(x.share||0),0);if(total!==100){alert("يجب أن يكون مجموع نسب ملكية الشركاء 100%");return}}
+ if(step<6){step++;render();scrollTo({top:390,behavior:"smooth"})}else{if(!document.getElementById("agree").checked||!document.getElementById("privacy").checked){alert("يرجى الموافقة على الإقرار وسياسة الخصوصية أولاً");return}successLive()}}
+function prev(){if(step){step--;render()}}
+function successDemo(){
+ let ref="REQ-2026-"+String(Math.floor(10000+Math.random()*89999));
+ d.requestRef=ref;
+ document.getElementById("body").innerHTML=`<div class="success"><div class="check">✓</div><h2>تم إرسال طلبك بنجاح</h2><p>تم استلام الطلب وتحويله إلى لوحة الإدارة للمراجعة.</p><div class="ref">${ref}</div><div class="qr" title="${ref}"></div><p style="color:var(--muted)">يمكنك الآن حجز اجتماع مع مستشار لمناقشة طلبك.</p><button class="btn primary" onclick="showMeeting()">حجز اجتماع مع مستشار</button> <button class="btn secondary" onclick="window.print()">طباعة ملخص الطلب</button></div>`;
+ document.querySelector(".actions").style.display="none";
+ localStorage.removeItem("premiumFormation");
+}
+function showMeeting(){
+ document.getElementById("body").innerHTML=`<div class="head"><h2>تحديد موعد اجتماع</h2><p>اختر طريقة الاجتماع ثم الموعد المناسب</p></div>
+ <div class="meeting-card">
+  <label>طريقة الاجتماع</label>
+  <div class="meeting-types">
+   <div class="meeting-type selected" id="onlineType" onclick="chooseMeetingType('online')"><div style="font-size:30px">💻</div><b>اجتماع أونلاين</b><p class="muted">سيظهر رابط الاجتماع بعد تأكيد الحجز</p></div>
+   <div class="meeting-type" id="officeType" onclick="chooseMeetingType('office')"><div style="font-size:30px">🏢</div><b>اجتماع في المقر</b><p class="muted">حضور العميل إلى مقر الشركة</p></div>
+  </div>
+  <div class="grid">
+   <div class="field"><label>التاريخ</label><input id="meetDate" type="date"></div>
+   <div class="field"><label>المستشار</label><select id="consultant"><option>أول مستشار متاح</option><option>مستشار تأسيس الشركات</option><option>مستشار خدمات الأعمال</option></select></div>
+  </div>
+  <label style="display:block;margin-top:18px">اختر الوقت</label>
+  <div class="slots" id="slots">${["09:00","10:00","11:30","13:00","14:30","16:00"].map(x=>`<button class="slot" onclick="selectSlot(this,'${x}')">${x}</button>`).join("")}</div>
+  <div id="officeDetails" style="display:none;margin-top:17px" class="smartbox"><b>مكان الاجتماع</b><p>سيظهر هنا عنوان المقر والفرع المختار ويمكن ربطه لاحقًا بخرائط Google.</p></div>
+  <div style="margin-top:20px"><button class="btn primary" onclick="confirmMeeting()">تأكيد الموعد</button></div>
+ </div>`;
+ let tomorrow=new Date();tomorrow.setDate(tomorrow.getDate()+1);document.getElementById("meetDate").value=tomorrow.toISOString().split("T")[0];
+}
+let meetingType="online",meetingSlot="";
+function chooseMeetingType(t){
+ meetingType=t;document.getElementById("onlineType").classList.toggle("selected",t==="online");document.getElementById("officeType").classList.toggle("selected",t==="office");document.getElementById("officeDetails").style.display=t==="office"?"block":"none";
+}
+function selectSlot(el,x){document.querySelectorAll(".slot").forEach(e=>e.classList.remove("selected"));el.classList.add("selected");meetingSlot=x}
+function confirmMeeting(){
+ let date=document.getElementById("meetDate").value;if(!date||!meetingSlot){alert("اختر التاريخ والوقت أولاً");return}
+ let meetingId=Math.random().toString(36).slice(2,6)+"-"+Math.random().toString(36).slice(2,6)+"-"+Math.random().toString(36).slice(2,6);
+ let demoLink="https://meet.example.com/"+meetingId;
+ let detail=meetingType==="online"?`<b>رابط الاجتماع</b><span class="meet-link">${demoLink}</span><small>هذا رابط تجريبي داخل النسخة الحالية. عند ربط Google Calendar/Meet بالخادم سيتم إنشاء رابط حقيقي تلقائيًا للطرفين.</small>`:`<b>الاجتماع في المقر</b><p>تم حجز الموعد حضوريًا. عند ربط بيانات الفروع سيظهر العنوان والخريطة هنا.</p>`;
+ document.querySelector(".meeting-card").innerHTML=`<div class="success"><div class="check">✓</div><h2>تم تأكيد موعد الاجتماع</h2><p><b>${date}</b> — الساعة <b>${meetingSlot}</b></p><p>رقم الطلب: ${d.requestRef||"-"}</p><div class="meet-result">${detail}</div><br><button class="btn secondary" onclick="window.print()">طباعة التأكيد</button></div>`;
+}
+
+const demoRequest={ref:"REQ-2026-10482",company:"شركة الريادة للحلول",status:"قيد المراجعة",progress:65};
+function openLogin(){document.getElementById("loginModal").style.display="flex"}
+function closeLogin(){document.getElementById("loginModal").style.display="none"}
+function loginDemo(){closeLogin();document.querySelector(".hero").style.display="none";document.querySelector(".app").style.display="none";document.getElementById("portal").style.display="block";window.scrollTo(0,0);portalPage("home")}
+function setMenu(el){if(!el)return;document.querySelectorAll(".menu button").forEach(x=>x.classList.remove("on"));el.classList.add("on")}
+function portalPage(page,el){setMenu(el);let m=document.getElementById("portalMain");
+ if(page==="home")m.innerHTML=`<div class="welcome"><div><h2>مرحبًا بك 👋</h2><span class="muted">تابع خدماتك وطلباتك من مكان واحد</span></div><button class="btn primary" onclick="document.getElementById('portal').style.display='none';document.querySelector('.hero').style.display='block';document.querySelector('.app').style.display='block';step=0;render()">+ طلب تأسيس جديد</button></div>
+ <div class="kpis"><div class="kpi"><b>1</b><small>الطلبات النشطة</small></div><div class="kpi"><b>65%</b><small>نسبة الإنجاز</small></div><div class="kpi"><b>1</b><small>مستند مطلوب</small></div><div class="kpi"><b>1</b><small>اجتماع قادم</small></div></div>
+ ${requestCard()}<h3 style="margin-top:22px">إجراءات مطلوبة منك</h3><div class="taskgrid"><div class="task urgent"><b>رفع مستند</b><p>الترخيص المطلوب</p><button class="mini add" onclick="portalPage('docs')">استكمال</button></div><div class="task pay"><b>عرض سعر</b><p>2,875 ريال</p><button class="mini add" onclick="portalPage('quotes')">مراجعة</button></div><div class="task meet"><b>اجتماع قادم</b><p>04/10 — 11:30 ص</p><button class="mini add" onclick="portalPage('meetings')">التفاصيل</button></div></div>`;
+ if(page==="tasks")m.innerHTML=`<h2>مهامي المطلوبة</h2><p class="muted">كل ما يحتاج إجراء منك في مكان واحد.</p><div class="taskgrid"><div class="task urgent"><b>رفع الترخيص المطلوب</b><p>طلب ${demoRequest.ref}</p><small>مطلوب لاستكمال المراجعة</small><br><button class="mini add" onclick="portalPage('docs')">رفع الآن</button></div><div class="task pay"><b>مراجعة عرض السعر</b><p>خدمة تأسيس الشركة</p><small>الإجمالي 2,875 ريال — نموذج تجريبي</small><br><button class="mini add" onclick="portalPage('quotes')">مراجعة العرض</button></div><div class="task meet"><b>اجتماع قادم</b><p>04/10/2026 — 11:30 ص</p><small>مستشار تأسيس الشركات</small><br><button class="mini add" onclick="portalPage('meetings')">عرض الموعد</button></div></div>`;
+ if(page==="companies")m.innerHTML=`<h2>شركاتي</h2><p class="muted">يمكن أن يحتوي حساب العميل على أكثر من شركة وخدمات متعددة لكل شركة.</p><div class="company-card"><div style="display:flex;gap:12px;align-items:center"><div class="company-icon">🏢</div><div><b>${demoRequest.company}</b><p class="muted">شركة ذات مسؤولية محدودة · الرياض</p><small>2 خدمات نشطة</small></div></div><button class="btn secondary" onclick="portalPage('requests')">فتح ملف الشركة</button></div><div class="company-card"><div style="display:flex;gap:12px;align-items:center"><div class="company-icon">＋</div><div><b>إضافة شركة أخرى</b><p class="muted">إنشاء ملف شركة جديد داخل نفس الحساب</p></div></div><button class="btn primary">إضافة</button></div>`;
+ if(page==="quotes"){
+ let qs=[];try{qs=JSON.parse(localStorage.getItem("formation_quotes_v1")||"[]")}catch(e){}
+ if(qs.length){
+  m.innerHTML=`<h2>عروض الأسعار والموافقات</h2><p class="muted">العروض المرسلة من الإدارة تظهر هنا للمراجعة.</p>`+qs.map(q=>`<div class="quote" id="quote-${q.id}"><div class="quote-head"><div><b>${q.id}</b><br><small>${q.request}</small></div><span class="status">${q.status}</span></div><div class="quote-body"><table class="portal-table"><tr><td>الإجمالي قبل الضريبة</td><td>${Number(q.subtotal||0).toLocaleString()} ريال</td></tr><tr><td>ضريبة القيمة المضافة 15%</td><td>${Number(q.vat||0).toLocaleString()} ريال</td></tr><tr><th>الإجمالي</th><th class="money">${Number(q.total||0).toLocaleString()} ريال</th></tr></table>${q.status==="بانتظار موافقة العميل"?`<div class="approval"><b>موافقة العميل</b><p>راجع العرض ثم اختر الإجراء المناسب.</p><button class="btn primary" onclick="respondQuote('${q.id}','مقبول')">قبول العرض</button> <button class="btn secondary" onclick="respondQuote('${q.id}','طلب تعديل')">طلب تعديل</button></div>`:`<div class="approval"><b>حالة العرض: ${q.status}</b></div>`}</div></div>`).join("");
+ }else{
+  m.innerHTML=`<h2>عروض الأسعار والموافقات</h2><div class="empty">لا توجد عروض أسعار مرسلة من الإدارة حاليًا.</div>`;
+ }}
+ if(page==="activity")m.innerHTML=`<h2>سجل نشاط الطلب</h2><p class="muted">تسلسل زمني واضح لكل تحديث يخص طلبك.</p><div class="activity"><div class="activity-item"><b>طلب استكمال مستند</b><p>تم طلب نسخة الترخيص.</p><small>02/10/2026 — 10:35 ص</small></div><div class="activity-item"><b>اكتملت المراجعة الأولية</b><p>تمت مراجعة بيانات الشركة والشركاء.</p><small>02/10/2026 — 09:20 ص</small></div><div class="activity-item"><b>تم استلام الطلب</b><p>تم إنشاء الطلب ${demoRequest.ref} بنجاح.</p><small>01/10/2026 — 04:15 م</small></div></div>`;
+ if(page==="requests")m.innerHTML=`<h2>طلباتي</h2><p class="muted">هنا تظهر طلبات هذا الحساب فقط.</p>${requestCard()}`;
+ if(page==="docs")m.innerHTML=`<h2>مستنداتي</h2><table class="portal-table"><tr><th>المستند</th><th>مرتبط بالطلب</th><th>الحالة</th><th></th></tr><tr><td>هوية المالك</td><td>${demoRequest.ref}</td><td>✓ تم الاستلام</td><td><button class="mini add">عرض</button></td></tr><tr><td>الترخيص المطلوب</td><td>${demoRequest.ref}</td><td style="color:#a56b00">مطلوب رفعه</td><td><input type="file"></td></tr></table>`;
+ if(page==="meetings")m.innerHTML=`<h2>اجتماعاتي</h2><div class="reqcard"><div class="reqtop"><div><b>اجتماع مع مستشار تأسيس الشركات</b><p class="muted">مرتبط بالطلب ${demoRequest.ref}</p></div><span class="status">قادم</span></div><p>04/10/2026 — 11:30 صباحًا</p><button class="btn primary">الانضمام للاجتماع</button> <button class="btn secondary">إعادة الجدولة</button></div>`;
+ if(page==="invoices"){
+ let inv=[];try{inv=JSON.parse(localStorage.getItem("formation_invoices_v1")||"[]")}catch(e){}
+ m.innerHTML=`<h2>الفواتير والمدفوعات</h2><p class="muted">الفواتير المرتبطة بطلباتك.</p>`+(inv.length?`<table class="portal-table"><tr><th>رقم الفاتورة</th><th>الطلب</th><th>القيمة</th><th>الحالة</th><th></th></tr>${inv.map(i=>`<tr><td>${i.id}</td><td>${i.request}</td><td>${Number(i.total||0).toLocaleString()} ريال</td><td>${i.status}</td><td><button class="mini add" onclick="alert('سيتم ربط بوابة الدفع الفعلية لاحقًا')">دفع الآن</button></td></tr>`).join("")}</table>`:`<div class="empty">لا توجد فواتير حاليًا.</div>`);
+ }
+ if(page==="messages")m.innerHTML=`<h2>الرسائل</h2><div class="reqcard"><b>فريق التأسيس</b><p>يرجى استكمال رفع مستند الترخيص المطلوب حتى نتمكن من متابعة الطلب.</p><small class="muted">اليوم، 10:35 ص</small></div><div class="field" style="margin-top:15px"><textarea rows="4" placeholder="اكتب رسالتك..."></textarea><button class="btn primary" style="margin-top:8px">إرسال</button></div>`;
+ if(page==="support")m.innerHTML=`<h2>الدعم</h2><p class="muted">أنشئ تذكرة مرتبطة بطلبك.</p><div class="grid"><div class="field"><label>رقم الطلب</label><input value="${demoRequest.ref}"></div><div class="field"><label>نوع المشكلة</label><select><option>استفسار عن الطلب</option><option>مشكلة في المستندات</option><option>موعد اجتماع</option><option>فاتورة أو دفع</option></select></div><div class="field full"><label>تفاصيل التذكرة</label><textarea rows="5"></textarea></div></div><button class="btn primary" style="margin-top:15px">إرسال التذكرة</button>`;
+}
+
+function respondQuote(id,response){
+ let qs=[];try{qs=JSON.parse(localStorage.getItem("formation_quotes_v1")||"[]")}catch(e){}
+ let q=qs.find(x=>x.id===id);if(!q)return;
+ q.status=response==="مقبول"?"تمت موافقة العميل":"طلب العميل تعديل العرض";
+ q.customerResponseDate=new Date().toLocaleString("ar-SA");
+ localStorage.setItem("formation_quotes_v1",JSON.stringify(qs));
+ if(response==="مقبول"){
+   let inv=[];try{inv=JSON.parse(localStorage.getItem("formation_invoices_v1")||"[]")}catch(e){}
+   if(!inv.some(x=>x.quoteId===id)){
+     inv.unshift({id:"INV-"+Date.now().toString().slice(-6),quoteId:id,request:q.request,client:q.client,total:q.total,status:"غير مدفوعة",created:new Date().toLocaleString("ar-SA")});
+     localStorage.setItem("formation_invoices_v1",JSON.stringify(inv));
+   }
+   alert("تم قبول العرض وإنشاء فاتورة تلقائيًا.");
+ }else alert("تم إرسال طلب التعديل إلى الإدارة.");
+ portalPage("quotes");
+}
+function requestCard(){return `<div class="reqcard"><div class="reqtop"><div><b>${demoRequest.company}</b><p class="muted">${demoRequest.ref}</p></div><span class="status">${demoRequest.status}</span></div><div class="timeline"><div class="tl done"><div class="dot">✓</div>تم الاستلام</div><div class="tl done"><div class="dot">✓</div>مراجعة أولية</div><div class="tl current"><div class="dot">3</div>استكمال مستندات</div><div class="tl"><div class="dot">4</div>قيد التنفيذ</div><div class="tl"><div class="dot">5</div>مكتمل</div></div><div class="alertbox"><b>⚠ مطلوب منك إجراء</b><br>يرجى رفع نسخة الترخيص المطلوب لاستكمال الطلب. <button class="mini add" onclick="portalPage('docs')">رفع المستند</button></div></div>`}
+
+const SB_URL='https://jtdxzszooiewafrnxven.supabase.co', SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imp0ZHh6c3pvb2lld2Fmcm54dmVuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA5MzM5MDksImV4cCI6MjEwNjUwOTkwOX0.MLBWLBGOz01R6zm9mf8K1Tx6oqHEHkWWlC8jw7O9-jU';
+let SB_TOKEN=localStorage.getItem("premium_customer_token")||"", SB_USER=null, LIVE_REQS=[];
+async function sb(path,opt={}){
+ let h={apikey:SB_KEY,"Content-Type":"application/json",...(opt.headers||{})};if(SB_TOKEN)h.Authorization="Bearer "+SB_TOKEN;
+ return fetch(SB_URL+path,{...opt,headers:h});
+}
+function loginErr(t){let e=document.getElementById("loginError");if(e)e.textContent=t}
+async function loginLive(){
+ loginErr("جاري تسجيل الدخول...");
+ let r=await sb("/auth/v1/token?grant_type=password",{method:"POST",body:JSON.stringify({email:loginUser.value.trim(),password:loginPass.value})}),x=await r.json();
+ if(!r.ok)return loginErr(x.error_description||x.message||"تعذر تسجيل الدخول");
+ SB_TOKEN=x.access_token;SB_USER=x.user;localStorage.setItem("premium_customer_token",SB_TOKEN);loginErr("");closeLogin();await enterLivePortal();
+}
+async function signupLive(){
+ loginErr("جاري إنشاء الحساب...");
+ let r=await sb("/auth/v1/signup",{method:"POST",body:JSON.stringify({email:loginUser.value.trim(),password:loginPass.value,data:{full_name:loginUser.value.split("@")[0]}})}),x=await r.json();
+ if(!r.ok)return loginErr(x.msg||x.message||"تعذر إنشاء الحساب");
+ if(x.access_token){SB_TOKEN=x.access_token;SB_USER=x.user;localStorage.setItem("premium_customer_token",SB_TOKEN);closeLogin();await enterLivePortal()}
+ else loginErr("تم إنشاء الحساب. سجل الدخول الآن.");
+}
+async function getLiveUser(){
+ if(SB_USER)return SB_USER;if(!SB_TOKEN)return null;let r=await sb("/auth/v1/user");if(!r.ok)return null;SB_USER=await r.json();return SB_USER;
+}
+async function enterLivePortal(){
+ let u=await getLiveUser();if(!u)return;
+ document.querySelector(".hero").style.display="none";document.querySelector(".app").style.display="none";document.getElementById("portal").style.display="block";window.scrollTo(0,0);
+ await loadLiveRequests();portalPage("home");
+}
+async function loadLiveRequests(){
+ let r=await sb("/rest/v1/requests?select=*&order=created_at.desc"),x=await r.json();LIVE_REQS=r.ok&&Array.isArray(x)?x:[];
+}
+function statusAr(x){return {new:"جديد",review:"قيد المراجعة",documents_required:"مطلوب مستندات",quote:"عرض سعر",payment:"بانتظار الدفع",in_progress:"قيد التنفيذ",completed:"مكتمل",cancelled:"ملغي"}[x]||x}
+async function successLive(){
+ let u=await getLiveUser();if(!u){openLogin();alert("سجّل الدخول بحساب العميل أولًا ثم أرسل الطلب.");return}
+ let companyName=(d.company||"").trim();if(!companyName){alert("يرجى إدخال اسم الشركة المقترح.");step=1;render();return}
+ document.getElementById("body").innerHTML=`<div class="success"><h2>جاري إرسال الطلب...</h2><p>يتم الآن تسجيل بيانات الشركة والطلب في قاعدة البيانات.</p></div>`;
+ try{
+  let cr=await sb("/rest/v1/companies",{method:"POST",headers:{Prefer:"return=representation"},body:JSON.stringify({owner_id:u.id,name:companyName,entity_type:d.entity||"",city:d.city||"",activity:d.activity||""})}),cd=await cr.json();
+  if(!cr.ok)throw new Error(cd.message||"تعذر إنشاء ملف الشركة");
+  let notes=JSON.stringify({company2:d.company2||"",company3:d.company3||"",companyEn:d.companyEn||"",partners:d.partners||[],activityDetails:d.activityDetails||"",manager:d.manager||"",address:d.address||""});
+  let rr=await sb("/rest/v1/requests",{method:"POST",headers:{Prefer:"return=representation"},body:JSON.stringify({customer_id:u.id,company_id:cd[0].id,service_name:"تأسيس شركة",customer_notes:notes,status:"new",priority:"medium",progress:0})}),rd=await rr.json();
+  if(!rr.ok)throw new Error(rd.message||"تعذر إنشاء الطلب");
+  d.requestRef=rd[0].request_no;await loadLiveRequests();
+  document.getElementById("body").innerHTML=`<div class="success"><div class="check">✓</div><h2>تم إرسال طلبك بنجاح</h2><p>تم استلام الطلب وتحويله إلى لوحة الإدارة للمراجعة.</p><div class="ref">${d.requestRef}</div><div class="qr" title="${d.requestRef}"></div><p style="color:var(--muted)">يمكنك متابعة حالة الطلب من بوابة العميل.</p><button class="btn primary" onclick="document.querySelector('.hero').style.display='none';document.querySelector('.app').style.display='none';document.getElementById('portal').style.display='block';portalPage('requests')">متابعة الطلب</button> <button class="btn secondary" onclick="window.print()">طباعة ملخص الطلب</button></div>`;
+  document.querySelector(".actions").style.display="none";localStorage.removeItem("premiumFormation");
+ }catch(e){document.getElementById("body").innerHTML=`<div class="success"><h2>تعذر إرسال الطلب</h2><p>${e.message}</p><button class="btn secondary" onclick="render()">العودة للنموذج</button></div>`}
+}
+function liveRequestCard(x){
+ return `<div class="reqcard"><div class="reqtop"><div><b>${x.service_name}</b><p class="muted">${x.request_no}</p></div><span class="status">${statusAr(x.status)}</span></div><div style="margin:14px 0"><b>نسبة الإنجاز: ${x.progress}%</b><div style="height:8px;background:#e9eef5;border-radius:8px;margin-top:7px"><div style="height:100%;width:${x.progress}%;background:#1769df;border-radius:8px"></div></div></div><small class="muted">تاريخ الطلب: ${new Date(x.created_at).toLocaleDateString("ar-SA")}</small></div>`;
+}
+const oldPortalPage=portalPage;
+portalPage=function(page,el){
+ if(!SB_TOKEN)return oldPortalPage(page,el);
+ setMenu(el);let m=document.getElementById("portalMain");
+ if(page==="home"){
+  let active=LIVE_REQS.filter(x=>!["completed","cancelled"].includes(x.status));
+  let avg=active.length?Math.round(active.reduce((a,x)=>a+Number(x.progress||0),0)/active.length):0;
+  m.innerHTML=`<div class="welcome"><div><h2>مرحبًا بك 👋</h2><span class="muted">تابع خدماتك وطلباتك من مكان واحد</span></div><button class="btn primary" onclick="document.getElementById('portal').style.display='none';document.querySelector('.hero').style.display='block';document.querySelector('.app').style.display='block';step=0;render()">+ طلب تأسيس جديد</button></div><div class="kpis"><div class="kpi"><b>${active.length}</b><small>الطلبات النشطة</small></div><div class="kpi"><b>${avg}%</b><small>متوسط الإنجاز</small></div><div class="kpi"><b>${LIVE_REQS.filter(x=>x.status==="documents_required").length}</b><small>مطلوب مستندات</small></div><div class="kpi"><b>${LIVE_REQS.length}</b><small>إجمالي الطلبات</small></div></div>${LIVE_REQS[0]?liveRequestCard(LIVE_REQS[0]):'<div class="empty">لا توجد طلبات حتى الآن.</div>'}`;return;
+ }
+ if(page==="requests"){m.innerHTML=`<h2>طلباتي</h2><p class="muted">هنا تظهر طلبات هذا الحساب فقط.</p>${LIVE_REQS.length?LIVE_REQS.map(liveRequestCard).join(""):'<div class="empty">لا توجد طلبات حتى الآن.</div>'}`;return}
+ if(page==="companies"){sb("/rest/v1/companies?select=*&order=created_at.desc").then(async r=>{let a=await r.json();m.innerHTML=`<h2>شركاتي</h2><p class="muted">جميع الشركات المسجلة في حسابك.</p>${r.ok&&a.length?a.map(c=>`<div class="company-card"><div style="display:flex;gap:12px;align-items:center"><div class="company-icon">🏢</div><div><b>${c.name}</b><p class="muted">${c.entity_type||"-"} · ${c.city||"-"}</p><small>${c.activity||""}</small></div></div></div>`).join(""):'<div class="empty">لا توجد شركات.</div>'}`});return}
+ if(page==="quotes"){sb("/rest/v1/quotes?select=*&order=created_at.desc").then(async r=>{let a=await r.json();m.innerHTML=`<h2>عروض الأسعار والموافقات</h2><p class="muted">العروض المرسلة من الإدارة.</p>${r.ok&&a.length?a.map(q=>`<div class="quote"><div class="quote-head"><div><b>${q.quote_no}</b></div><span class="status">${q.status}</span></div><div class="quote-body"><b class="money">${Number(q.total).toLocaleString()} ريال</b></div></div>`).join(""):'<div class="empty">لا توجد عروض أسعار حاليًا.</div>'}`});return}
+ if(page==="invoices"){sb("/rest/v1/invoices?select=*&order=created_at.desc").then(async r=>{let a=await r.json();m.innerHTML=`<h2>الفواتير والمدفوعات</h2>${r.ok&&a.length?`<table class="portal-table"><tr><th>الفاتورة</th><th>القيمة</th><th>الحالة</th></tr>${a.map(i=>`<tr><td>${i.invoice_no}</td><td>${Number(i.total).toLocaleString()} ريال</td><td>${i.status}</td></tr>`).join("")}</table>`:'<div class="empty">لا توجد فواتير حاليًا.</div>'}`});return}
+ oldPortalPage(page,el);
+}
+async function restorePremiumSession(){if(!SB_TOKEN)return;let u=await getLiveUser();if(u)await enterLivePortal();else{SB_TOKEN="";localStorage.removeItem("premium_customer_token")}}
+restorePremiumSession();
+render();
+</script>
+</body>
+</html>
